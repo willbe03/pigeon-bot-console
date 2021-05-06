@@ -11,10 +11,10 @@ import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import org.gugugu.org.gugugu.PigeonBotConsole
 
-object KeywordAdd : RawCommand(PigeonBotConsole,"add","a",description = "增加关键字") {
-//    @Handler
-    override suspend fun CommandSender.onCommand(args: MessageChain){
-        if (args.size!=2) {
+object KeywordAdd : RawCommand(PigeonBotConsole, "add", "a", description = "增加关键字") {
+    //    @Handler
+    override suspend fun CommandSender.onCommand(args: MessageChain) {
+        if (args.size != 2) {
             sendMessage("参数错误")
             consoleLogger.info(args.content)
             return
@@ -27,11 +27,10 @@ object KeywordAdd : RawCommand(PigeonBotConsole,"add","a",description = "增加�
             else
                 KeywordData.replyData[key] = mutableSetOf(value)
             sendMessage("添加\"${value}\"到\"${key}\"")
-        }
-        else {
+        } else {
             val key = args[0].content
             val value = args[1]
-            sendMessage("IMG"+key)
+            sendMessage("IMG" + key)
             sendMessage((value as Image).queryUrl())
         }
     }
@@ -44,17 +43,30 @@ object KeywordAdd : RawCommand(PigeonBotConsole,"add","a",description = "增加�
 
 //object KeywordAddRaw:RawCommand(PigeonBotConsole,"add", description = "增加关键字")
 
-object KeyWordList: SimpleCommand(PigeonBotConsole,"list","ls",description = "列出关键字"){
+object KeyWordList : SimpleCommand(PigeonBotConsole, "list", "ls", description = "列出关键字") {
     @Handler
-    suspend fun CommandSender.list(key: String){
+    suspend fun CommandSender.list(key: String) {
         try {
             sendMessage(KeywordData.replyData[key].toString())
-        }catch (e:Exception){
+        } catch (e: Exception) {
             sendMessage("未找到关键字")
         }
     }
+
     @Handler
-    suspend fun CommandSender.list(){
+    suspend fun CommandSender.list() {
         sendMessage(KeywordData.replyData.keys.toString())
+    }
+}
+
+object KeyWordDelete : SimpleCommand(PigeonBotConsole, "del", "rm", description = "删除关键字"){
+    @Handler
+    suspend fun CommandSender.del(key: String, value: String){
+        try {
+            KeywordData.replyData.remove(key,value)
+            sendMessage("删除成功")
+        }catch (e:Exception){
+            sendMessage("未找到关键字或者回复词，删除失败")
+        }
     }
 }
