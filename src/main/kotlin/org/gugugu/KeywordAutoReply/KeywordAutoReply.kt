@@ -63,7 +63,7 @@ object KeyWordDelete : SimpleCommand(PigeonBotConsole, "del", "rm", description 
     @Handler
     suspend fun CommandSender.del(key: String, value: String){
         try {
-            KeywordData.replyData.remove(key,value)
+            KeywordData.replyData[key]!!.remove(value)
             sendMessage("删除成功")
         }catch (e:Exception){
             sendMessage("未找到关键字或者回复词，删除失败")
