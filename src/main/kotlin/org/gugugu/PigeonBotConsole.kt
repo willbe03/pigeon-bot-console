@@ -9,6 +9,8 @@ import org.gugugu.KeywordAutoReply.KeyWordList
 import org.gugugu.KeywordAutoReply.KeywordAdd
 import org.gugugu.KeywordAutoReply.KeywordData
 import org.gugugu.KeywordAutoReply.subscribeKeywordAutoReply
+import org.gugugu.config.Config
+import org.gugugu.config.ConfigCommand
 
 object PigeonBotConsole : KotlinPlugin(
     JvmPluginDescription(
@@ -19,9 +21,14 @@ object PigeonBotConsole : KotlinPlugin(
 ) {
     override fun onEnable() {
         logger.info { "Plugin loaded" }
+        // load configs
         KeywordData.reload()
+        Config.reload()
+        // register commands
         KeywordAdd.register()
         KeyWordList.register()
+        ConfigCommand.register()
+        // subscribe messages
         subscribeKeywordAutoReply()
     }
 

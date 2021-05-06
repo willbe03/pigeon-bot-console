@@ -11,7 +11,7 @@ import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import org.gugugu.org.gugugu.PigeonBotConsole
 
-object KeywordAdd : RawCommand(PigeonBotConsole,"add",description = "增加关键字") {
+object KeywordAdd : RawCommand(PigeonBotConsole,"add","a",description = "增加关键字") {
 //    @Handler
     override suspend fun CommandSender.onCommand(args: MessageChain){
         if (args.size!=2) {
@@ -44,7 +44,7 @@ object KeywordAdd : RawCommand(PigeonBotConsole,"add",description = "增加关�
 
 //object KeywordAddRaw:RawCommand(PigeonBotConsole,"add", description = "增加关键字")
 
-object KeyWordList: SimpleCommand(PigeonBotConsole,"list",description = "列出关键字"){
+object KeyWordList: SimpleCommand(PigeonBotConsole,"list","ls",description = "列出关键字"){
     @Handler
     suspend fun CommandSender.list(key: String){
         try {
