@@ -12,3 +12,8 @@ repositories {
     maven { url 'https://maven.aliyun.com/repository/public' }
     mavenCentral()
 }
+
+dependencies {
+    api 'net.mamoe:mirai-console-terminal:2.6.3'
+    api 'net.mamoe:mirai-core:2.6.3'
+}

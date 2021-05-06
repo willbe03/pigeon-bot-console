@@ -8,6 +8,7 @@ import net.mamoe.mirai.utils.info
 import org.gugugu.KeywordAutoReply.KeyWordList
 import org.gugugu.KeywordAutoReply.KeywordAdd
 import org.gugugu.KeywordAutoReply.KeywordData
+import org.gugugu.KeywordAutoReply.subscribeKeywordAutoReply
 
 object PigeonBotConsole : KotlinPlugin(
     JvmPluginDescription(
@@ -21,6 +22,7 @@ object PigeonBotConsole : KotlinPlugin(
         KeywordData.reload()
         KeywordAdd.register()
         KeyWordList.register()
+        subscribeKeywordAutoReply()
     }
 
     override fun onDisable() {
