@@ -1,25 +1,24 @@
 package org.gugugu.KeywordAutoReply
 
-import net.mamoe.mirai.console.command.BuiltInCommands.AutoLoginCommand.add
+import kotlinx.coroutines.CoroutineScope
 import net.mamoe.mirai.console.command.CommandSender
-import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.RawCommand
 import net.mamoe.mirai.console.command.SimpleCommand
-import net.mamoe.mirai.console.data.PluginDataStorage
 import net.mamoe.mirai.console.terminal.consoleLogger
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
+import net.mamoe.mirai.utils.MiraiInternalApi
 import org.gugugu.org.gugugu.PigeonBotConsole
 
 object KeywordAdd : RawCommand(PigeonBotConsole, "add", "a", description = "增加关键字") {
-    //    @Handler
+    @OptIn(MiraiInternalApi::class)
     override suspend fun CommandSender.onCommand(args: MessageChain) {
         if (args.size != 2) {
             sendMessage("参数错误")
             consoleLogger.info(args.content)
             return
         }
-        if (!args.contains(Image)) {
+        if (!args.contains(Image)) { // 不带图像
             val key = args[0].content
             val value = args[1].content
             if (KeywordData.replyData.containsKey(key))
@@ -27,21 +26,20 @@ object KeywordAdd : RawCommand(PigeonBotConsole, "add", "a", description = "增�
             else
                 KeywordData.replyData[key] = mutableSetOf(value)
             sendMessage("添加\"${value}\"到\"${key}\"")
-        } else {
+        } else { //带图像
             val key = args[0].content
-            val value = args[1]
+            val value = args[1] as Image
+//            value.
+//            if (KeywordData.replyData.containsKey(key))
+//                KeywordData.replyData[key]?.add("$"+ value.md5)
+//            else
+//                KeywordData.replyData[key] = mutableSetOf("$"+ value.md5)
             sendMessage("IMG" + key)
             sendMessage((value as Image).queryUrl())
         }
     }
-//    @Handler
-//    suspend fun CommandSender.handle(key: String, img: Image){
-//        sendMessage("IMG"+key)
-//        sendMessage(img)
-//    }
-}
 
-//object KeywordAddRaw:RawCommand(PigeonBotConsole,"add", description = "增加关键字")
+}
 
 object KeyWordList : SimpleCommand(PigeonBotConsole, "list", "ls", description = "列出关键字") {
     @Handler

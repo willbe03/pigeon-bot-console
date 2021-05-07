@@ -6,6 +6,7 @@ import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import net.mamoe.mirai.utils.info
 import org.gugugu.KeywordAutoReply.*
+import org.gugugu.cats.cats
 import org.gugugu.config.Config
 import org.gugugu.config.ConfigCommand
 import java.io.File
@@ -30,6 +31,7 @@ object PigeonBotConsole : KotlinPlugin(
         ConfigCommand.register()
         // subscribe messages
         subscribeKeywordAutoReply()
+        cats()
     }
 
     override fun onDisable() {
