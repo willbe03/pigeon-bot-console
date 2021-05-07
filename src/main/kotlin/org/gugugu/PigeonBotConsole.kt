@@ -9,6 +9,7 @@ import org.gugugu.KeywordAutoReply.*
 import org.gugugu.cats.cats
 import org.gugugu.config.Config
 import org.gugugu.config.ConfigCommand
+import org.gugugu.game.GameData
 import java.io.File
 
 object PigeonBotConsole : KotlinPlugin(
@@ -24,6 +25,7 @@ object PigeonBotConsole : KotlinPlugin(
         // load configs
         KeywordData.reload()
         Config.reload()
+        GameData.reload()
         // register commands
         KeywordAdd.register()
         KeyWordList.register()
