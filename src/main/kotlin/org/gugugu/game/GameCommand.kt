@@ -1,13 +1,9 @@
 package org.gugugu.game
 
 import io.ktor.util.date.*
-import net.mamoe.mirai.console.command.BuiltInCommands.AutoLoginCommand.add
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
-import net.mamoe.mirai.contact.Member
-import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.contact.getMember
-import org.gugugu.config.ConfigCommand.list
 import org.gugugu.org.gugugu.PigeonBotConsole
 
 object GameCommand : CompositeCommand(PigeonBotConsole, "game", "g", description = "游戏") {
@@ -38,7 +34,7 @@ object GameCommand : CompositeCommand(PigeonBotConsole, "game", "g", description
 
     @SubCommand("join", "j")
     suspend fun CommandSender.join(name: String) {
-
+        
     }
 
     @SubCommand("quit", "q")
