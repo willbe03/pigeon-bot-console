@@ -21,7 +21,7 @@ object PigeonBotConsole : KotlinPlugin(
     )
 ) {
     override fun onEnable() {
-        logger.info { "Plugin loaded" }
+        logger.info { "PigeonBot loaded" }
         initFolders()
         // load configs
         KeywordData.reload()
