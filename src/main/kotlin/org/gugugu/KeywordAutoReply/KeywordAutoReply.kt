@@ -58,6 +58,7 @@ object KeywordAdd : RawCommand(PigeonBotConsole, "add", "a", description = "增�
             consoleLogger.info("added image md5: " + value.md5.toHexString())
 //            sendMessage("IMG" + key)
 //            sendMessage((value as Image).queryUrl())
+            sendMessage("添加\"${value}\"到\"${key}\"")
         }
     }
 

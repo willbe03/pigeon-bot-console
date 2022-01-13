@@ -8,4 +8,5 @@ object Config : AutoSavePluginData(saveName = "config") {
     var smartP : Double by value(1.0)
     var repeatP : Double by value(3.0)
     var hhshP : Double by value(10.0)
+    var sauceNaoApiKey : String by value()
 }
