@@ -4,7 +4,7 @@ import io.ktor.util.date.*
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.contact.getMember
-import org.gugugu.org.gugugu.PigeonBotConsole
+import org.gugugu.PigeonBotConsole
 
 object GameCommand : CompositeCommand(PigeonBotConsole, "game", "g", description = "游戏") {
     val games = GameData.games

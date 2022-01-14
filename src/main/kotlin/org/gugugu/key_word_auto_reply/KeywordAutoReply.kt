@@ -1,14 +1,12 @@
-package org.gugugu.KeywordAutoReply
+package org.gugugu.key_word_auto_reply
 
-import kotlinx.coroutines.CoroutineScope
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand
 import net.mamoe.mirai.console.command.SimpleCommand
-import net.mamoe.mirai.console.terminal.consoleLogger
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
-import net.mamoe.mirai.utils.MiraiInternalApi
-import org.gugugu.org.gugugu.PigeonBotConsole
+import net.mamoe.mirai.message.data.MessageSource.Key.quote
+import org.gugugu.PigeonBotConsole
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
@@ -33,7 +31,6 @@ object KeywordAdd : RawCommand(PigeonBotConsole, "add", "a", description = "增�
     override suspend fun CommandSender.onCommand(args: MessageChain) {
         if (args.size != 2) {
             sendMessage("参数错误")
-            consoleLogger.info(args.content)
             return
         }
         if (!args.contains(Image)) { // 不带图像
@@ -55,9 +52,6 @@ object KeywordAdd : RawCommand(PigeonBotConsole, "add", "a", description = "增�
                 KeywordData.replyData[key]?.add("$" + value.md5.toHexString())
             else
                 KeywordData.replyData[key] = mutableSetOf("$" + value.md5.toHexString())
-            consoleLogger.info("added image md5: " + value.md5.toHexString())
-//            sendMessage("IMG" + key)
-//            sendMessage((value as Image).queryUrl())
             sendMessage("添加\"${value}\"到\"${key}\"")
         }
     }

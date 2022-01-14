@@ -2,10 +2,7 @@ package org.gugugu.config
 
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
-import net.mamoe.mirai.console.command.SimpleCommand
-import org.gugugu.config.ConfigCommand.repeatP
-import org.gugugu.config.ConfigCommand.replyP
-import org.gugugu.org.gugugu.PigeonBotConsole
+import org.gugugu.PigeonBotConsole
 
 object ConfigCommand: CompositeCommand(PigeonBotConsole,"config") {
     @SubCommand

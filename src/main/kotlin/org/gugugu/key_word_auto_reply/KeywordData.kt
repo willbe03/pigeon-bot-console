@@ -1,4 +1,4 @@
-package org.gugugu.KeywordAutoReply
+package org.gugugu.key_word_auto_reply
 
 import net.mamoe.mirai.console.data.AutoSavePluginData
 import net.mamoe.mirai.console.data.value

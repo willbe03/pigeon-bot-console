@@ -3,14 +3,16 @@ package org.gugugu.saucenao
 import com.google.gson.Gson
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand
-import net.mamoe.mirai.console.util.safeCast
+import net.mamoe.mirai.event.GlobalEventChannel
+import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
+import net.mamoe.mirai.utils.ExternalResource.Companion.sendAsImageTo
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.gugugu.config.Config
-import org.gugugu.org.gugugu.PigeonBotConsole
+import org.gugugu.PigeonBotConsole
 
 /**
  * enable Twitter, Pixiv, yande.re, Pixivhistorical
@@ -35,6 +37,32 @@ object SauceNaoCommand : RawCommand(PigeonBotConsole, "sauce", description = "�
                 sendMessage(search(args.get(Image)!!.queryUrl()))
             } else {
                 sendMessage("错误：消息内容没有图片")
+            }
+        }
+    }
+}
+
+fun sauce(){
+    GlobalEventChannel.subscribeMessages{
+        contains("/sauce"){
+            val args = message
+            val meta = args.metadataList().firstOrNull() { it is QuoteReply }
+            if (meta != null) {
+                val quote = meta as QuoteReply
+                // Quote image to search
+                val image = quote.source.originalMessage.get(Image)
+                if (image != null) {
+                    subject.sendMessage(search(image.queryUrl()))
+                } else {
+                    subject.sendMessage("错误：回复的消息内容没有图片")
+                }
+            } else {
+                // direct search
+                if (args.contains(Image)) {
+                    subject.sendMessage(search(args.get(Image)!!.queryUrl()))
+                } else {
+                    subject.sendMessage("错误：消息内容没有图片")
+                }
             }
         }
     }

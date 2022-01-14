@@ -1,21 +1,18 @@
-package org.gugugu.org.gugugu
+package org.gugugu
 
 import net.mamoe.mirai.console.command.CommandManager
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
-import net.mamoe.mirai.event.GlobalEventChannel
-import net.mamoe.mirai.event.subscribeGroupMessages
-import net.mamoe.mirai.message.data.Image
-import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.utils.info
-import org.gugugu.KeywordAutoReply.*
+import org.gugugu.key_word_auto_reply.*
 import org.gugugu.cats.cats
 import org.gugugu.config.Config
 import org.gugugu.config.ConfigCommand
 import org.gugugu.game.GameCommand
 import org.gugugu.game.GameData
 import org.gugugu.saucenao.SauceNaoCommand
+import org.gugugu.saucenao.sauce
 import java.io.File
 
 object PigeonBotConsole : KotlinPlugin(
@@ -40,6 +37,7 @@ object PigeonBotConsole : KotlinPlugin(
         GameCommand.register()
         SauceNaoCommand.register()
         // subscribe messages
+//        sauce()
         subscribeKeywordAutoReply()
         cats()
     }
