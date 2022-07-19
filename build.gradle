@@ -1,9 +1,9 @@
 
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.5.30'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.30'
 
-    id 'net.mamoe.mirai-console' version '2.9.2'
+    id 'net.mamoe.mirai-console' version '2.12.0'
 }
 
 group = 'org.gugugu'
@@ -14,9 +14,7 @@ repositories {
 }
 
 dependencies {
-//    api 'net.mamoe:mirai-console-terminal:2.9.2'
-//    api 'net.mamoe:mirai-core:2.9.2'
     implementation "org.quartz-scheduler:quartz:2.3.2"
-    implementation "com.google.code.gson:gson:2.8.9"
-    implementation "com.squareup.okhttp3:okhttp:4.9.3"
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 }

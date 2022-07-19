@@ -7,6 +7,7 @@ import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.message.data.MessageSource.Key.quote
 import org.gugugu.PigeonBotConsole
+import org.gugugu.game.GameCommand.remove
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
@@ -74,14 +75,48 @@ object KeyWordList : SimpleCommand(PigeonBotConsole, "list", "ls", description =
     }
 }
 
-object KeyWordDelete : SimpleCommand(PigeonBotConsole, "del", "rm", description = "删除关键字") {
-    @Handler
-    suspend fun CommandSender.del(key: String, value: String) {
-        try {
-            KeywordData.replyData[key]!!.remove(value)
-            sendMessage("删除成功")
-        } catch (e: Exception) {
-            sendMessage("未找到关键字或者回复词，删除失败")
+object KeyWordDelete : RawCommand(PigeonBotConsole, "del", "rm", description = "删除关键字") {
+    override suspend fun CommandSender.onCommand(args: MessageChain) {
+        if (args.size != 2) {
+            sendMessage("参数错误")
+            return
         }
+        val key = args[0].content
+        val value = args[1]
+        if (!args.contains(Image)) { // 不带图像
+            // 如果有key和value就delete
+            if (KeywordData.replyData.containsKey(key)
+                && KeywordData.replyData[key]!!.contains(value.content)){
+                // remove value
+                KeywordData.replyData[key]!!.remove(value.content)
+                if(KeywordData.replyData[key]!!.isEmpty()){
+                    // 如果没有value就remove key
+                    KeywordData.replyData.remove(key)
+                }
+                sendMessage("已删除关联词")
+            }else{
+                sendMessage("未找到关键词")
+            }
+        }else{// 带图像
+            val img = args[1] as Image
+            val md5String = "$" + img.md5.toHexString()
+            if (KeywordData.replyData.containsKey(key)
+                && KeywordData.replyData[key]!!.contains(md5String)){
+                // remove value
+                KeywordData.replyData[key]!!.remove(md5String)
+                // delete file
+                val replyFolderPath = PigeonBotConsole.resolveDataFile("images/replies").absolutePath
+                val imgFile = File("$replyFolderPath/$md5String.gif")
+                imgFile.delete()
+                if(KeywordData.replyData[key]!!.isEmpty()){
+                    // 如果没有value就remove key
+                    KeywordData.replyData.remove(key)
+                }
+                sendMessage("已删除关联词")
+            }else{
+                sendMessage("未找到关键词")
+            }
+        }
+
     }
 }

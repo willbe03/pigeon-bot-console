@@ -12,6 +12,7 @@ fun subscribeKeywordAutoReply() {
     val autoReplyMap = KeywordData.replyData
     GlobalEventChannel.subscribeGroupMessages {
         always {
+            // reply
             if (Random.nextDouble(0.0, 100.0) <= Config.replyP) {
                 for ((key, value) in autoReplyMap) {
                     if (message.content.contains(key) && !message.content.startsWith("1")) {
@@ -24,6 +25,11 @@ fun subscribeKeywordAutoReply() {
                         break
                     }
                 }
+            }
+            //repeat
+
+            if(Random.nextDouble(0.0, 100.0)<= Config.repeatP){
+                group.sendMessage(message)
             }
         }
     }
