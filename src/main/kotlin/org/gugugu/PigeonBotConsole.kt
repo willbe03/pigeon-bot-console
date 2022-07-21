@@ -11,8 +11,11 @@ import org.gugugu.config.Config
 import org.gugugu.config.ConfigCommand
 import org.gugugu.game.GameCommand
 import org.gugugu.game.GameData
+import org.gugugu.quote.AddQuoteCommand
+import org.gugugu.quote.QueryQuoteCommand
+import org.gugugu.quote.QuoteData
+import org.gugugu.quote.RandomQuoteCommand
 import org.gugugu.saucenao.SauceNaoCommand
-import org.gugugu.saucenao.sauce
 import java.io.File
 
 object PigeonBotConsole : KotlinPlugin(
@@ -29,6 +32,7 @@ object PigeonBotConsole : KotlinPlugin(
         KeywordData.reload()
         Config.reload()
         GameData.reload()
+        QuoteData.reload()
         // register commands
         KeywordAdd.register()
         KeyWordList.register()
@@ -36,6 +40,10 @@ object PigeonBotConsole : KotlinPlugin(
         ConfigCommand.register()
         GameCommand.register()
         SauceNaoCommand.register()
+
+        RandomQuoteCommand.register()
+        AddQuoteCommand.register()
+        QueryQuoteCommand.register()
         // subscribe messages
 //        sauce()
         subscribeKeywordAutoReply()
