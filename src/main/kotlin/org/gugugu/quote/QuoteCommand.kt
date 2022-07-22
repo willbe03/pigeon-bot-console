@@ -15,33 +15,45 @@ object AddQuoteCommand : RawCommand(
     /上传语录 [图片]
 """.trimIndent()
 ) {
-    override suspend fun CommandSender.onCommand(args: MessageChain) {
+    override suspend fun CommandContext.onCommand(args: MessageChain) {
         if (!args.contains(Image)) {
-            sendMessage("上传失败：未找到语录图片")
+            this.sender.sendMessage("上传失败：未找到语录图片")
             return
         }
         val quote: String
         val image = args[Image]!!
         val md5 = "$" + image.md5.toHexString()
-        val memberqq: Long
+        val memberQQ: Long
 
-        val q = (this as MemberCommandSenderOnMessage).fromEvent.message
-        if (q[1] is QuoteReply){
-            // 如果有quote
-            quote = (q[1] as QuoteReply).source.originalMessage.content //quote message
-            memberqq = (q[1] as QuoteReply).source.fromId
-        } else {
+        val message = this.originalMessage
+        if (message.contains(QuoteReply)) {
+            quote = message[QuoteReply]!!.content
+            memberQQ = message[QuoteReply]!!.source.fromId
+        } else if (message.findIsInstance<At>() != null) {
             quote = ""
-            val at = args.contentsList().firstOrNull() { it is At } as At
-            memberqq = at.target
+            memberQQ = message.findIsInstance<At>()!!.target
+        } else {
+            this.sender.sendMessage("没有语录来源")
+            return
         }
+//        val q = (this as MemberCommandSenderOnMessage).fromEvent.message
+//        if (q[1] is QuoteReply){
+//            // 如果有quote
+//            quote = (q[1] as QuoteReply).source.originalMessage.content //quote message
+//            memberQQ = (q[1] as QuoteReply).source.fromId
+//        } else {
+//            quote = ""
+//            // TODO: check if message contains At
+//            val at = args.contentsList().firstOrNull { it is At } as At
+//            memberQQ = at.target
+//        }
 
         // download image
         val imageUrl = image.queryUrl()
         val quoteFolderPath = PigeonBotConsole.resolveDataFile("images/quotes").absolutePath
         downloadImage(imageUrl, "$quoteFolderPath/$md5.jpg")
         // add quote
-        QuoteData.quoteData.add(Quote(md5, memberqq, quote))
+        QuoteData.quoteData.add(Quote(md5, memberQQ, quote))
     }
 }
 
@@ -49,19 +61,19 @@ object RandomQuoteCommand : SimpleCommand(PigeonBotConsole, "语录", descriptio
     @Handler
     suspend fun foo(context: CommandContext, arg: At) {
         val quote = QuoteData.quoteData.filter { it.memberQQ == arg.target }
-        if (quote.isNotEmpty()){
+        if (quote.isNotEmpty()) {
             val filename = quote.random().md5
             val quoteFolderPath = PigeonBotConsole.resolveDataFile("images/quotes").absolutePath
             val img = File("$quoteFolderPath/$filename.jpg")
             context.sender.subject!!.sendImage(img)
-        }else{
+        } else {
             context.sender.subject!!.sendMessage("没有找到语录")
         }
     }
 }
 
 object QueryQuoteCommand : RawCommand(PigeonBotConsole, "搜索语录", "q", description = "搜索语录") {
-    override suspend fun CommandSender.onCommand(args: MessageChain) {
+    override suspend fun CommandContext.onCommand(args: MessageChain) {
         TODO("Not yet implemented")
 
     }
