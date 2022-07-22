@@ -72,9 +72,32 @@ object RandomQuoteCommand : SimpleCommand(PigeonBotConsole, "语录", descriptio
     }
 }
 
-object QueryQuoteCommand : RawCommand(PigeonBotConsole, "搜索语录", "q", description = "搜索语录") {
-    override suspend fun CommandContext.onCommand(args: MessageChain) {
-        TODO("Not yet implemented")
+object QueryQuoteCommand : SimpleCommand(PigeonBotConsole, "搜索语录", "q", description = "搜索语录") {
+    @Handler
+    suspend fun getQuoteFromUser(context: CommandContext, target: At, content: String) {
+        val randomImageMd5 = QuoteData.quoteData.filter {
+            it.memberQQ == target.target && it.content.contains(content)
+        }.randomOrNull()?.md5
+        if (randomImageMd5 != null) {
+            sendQuote(context, randomImageMd5)
+        } else {
+            context.sender.subject!!.sendMessage("没有找到语录")
+        }
+    }
 
+    @Handler
+    suspend fun getQuote(context: CommandContext, content: String) {
+        val randomImageMd5 = QuoteData.quoteData.filter { it.content.contains(content) }.randomOrNull()?.md5
+        if (randomImageMd5 != null) {
+            sendQuote(context, randomImageMd5)
+        } else {
+            context.sender.subject!!.sendMessage("没有找到语录")
+        }
+    }
+
+    suspend fun sendQuote(context: CommandContext, md5: String) {
+        val quoteFolderPath = PigeonBotConsole.resolveDataFile("images/quotes").absolutePath
+        val img = File("$quoteFolderPath/$md5.jpg")
+        context.sender.subject!!.sendImage(img)
     }
 }
