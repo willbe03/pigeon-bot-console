@@ -1,6 +1,8 @@
 package org.gugugu.saucenao
 
 import com.google.gson.Gson
+import net.mamoe.mirai.IMirai
+import net.mamoe.mirai.console.command.CommandContext
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand
 import net.mamoe.mirai.event.GlobalEventChannel
@@ -22,51 +24,55 @@ const val MASK = 1099511631968
 const val SAUCENAO_URL = "https://saucenao.com/search.php"
 
 object SauceNaoCommand : RawCommand(PigeonBotConsole, "sauce", description = "查询图片来源") {
-    override suspend fun CommandSender.onCommand(args: MessageChain) {
-        if (args.metadataList().firstOrNull() { it is QuoteReply } != null) {
+    override suspend fun CommandContext.onCommand(args: MessageChain) {
+        if (this.originalMessage.contains(QuoteReply)) {
             // Quote image to search
-            val image = args.get(QuoteReply)!!.source.originalMessage.get(Image)
+            val image = this.originalMessage[QuoteReply]!!.source.originalMessage.get(Image)
+            val a = MessageSourceBuilder()
+                .allFrom(this.originalMessage[QuoteReply]!!.source)
+                .build(botId = 2211584232L, kind = MessageSourceKind.GROUP)
+            a.originalMessage
             if (image != null) {
-                sendMessage(search(image.queryUrl()))
+                this.sender.sendMessage(search(image.queryUrl()))
             } else {
-                sendMessage("错误：回复的消息内容没有图片")
+                this.sender.sendMessage("错误：回复的消息内容没有图片")
             }
         } else {
             // direct search
             if (args.contains(Image)) {
-                sendMessage(search(args.get(Image)!!.queryUrl()))
+                this.sender.sendMessage(search(args.get(Image)!!.queryUrl()))
             } else {
-                sendMessage("错误：消息内容没有图片")
+                this.sender.sendMessage("错误：消息内容没有图片")
             }
         }
     }
 }
 
-fun sauce(){
-    GlobalEventChannel.subscribeMessages{
-        contains("/sauce"){
-            val args = message
-            val meta = args.metadataList().firstOrNull() { it is QuoteReply }
-            if (meta != null) {
-                val quote = meta as QuoteReply
-                // Quote image to search
-                val image = quote.source.originalMessage.get(Image)
-                if (image != null) {
-                    subject.sendMessage(search(image.queryUrl()))
-                } else {
-                    subject.sendMessage("错误：回复的消息内容没有图片")
-                }
-            } else {
-                // direct search
-                if (args.contains(Image)) {
-                    subject.sendMessage(search(args.get(Image)!!.queryUrl()))
-                } else {
-                    subject.sendMessage("错误：消息内容没有图片")
-                }
-            }
-        }
-    }
-}
+//fun sauce(){
+//    GlobalEventChannel.subscribeMessages{
+//        contains("/sauce"){
+//            val args = message
+//            val meta = args.metadataList().firstOrNull() { it is QuoteReply }
+//            if (meta != null) {
+//                val quote = meta as QuoteReply
+//                // Quote image to search
+//                val image = quote.source.originalMessage.get(Image)
+//                if (image != null) {
+//                    subject.sendMessage(search(image.queryUrl()))
+//                } else {
+//                    subject.sendMessage("错误：回复的消息内容没有图片")
+//                }
+//            } else {
+//                // direct search
+//                if (args.contains(Image)) {
+//                    subject.sendMessage(search(args.get(Image)!!.queryUrl()))
+//                } else {
+//                    subject.sendMessage("错误：消息内容没有图片")
+//                }
+//            }
+//        }
+//    }
+//}
 
 /**
  * @throws NullPointerException when the response body is empty
