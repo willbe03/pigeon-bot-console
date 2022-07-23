@@ -1,16 +1,11 @@
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.request.*
-import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.mamoe.mirai.console.command.CommandContext
 import net.mamoe.mirai.console.command.SimpleCommand
 import net.mamoe.mirai.message.data.sendTo
 import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -27,7 +22,7 @@ object SetuCommand : SimpleCommand(PigeonBotConsole, "色图", description = "�
 
     @Handler
     suspend fun searchSetu(context: CommandContext, tag: String){
-        setu(context, tag);
+        setu(context, tag)
     }
 
     suspend fun setu(context: CommandContext, tag: String?) {
@@ -60,9 +55,11 @@ object SetuCommand : SimpleCommand(PigeonBotConsole, "色图", description = "�
         val img = response.data.random()
         val imageUrl = img.urls?.regular
         if (imageUrl != null) {
+            withContext(Dispatchers.IO) {
                 URL(imageUrl)
                     .openConnection()
                     .getInputStream()
+            }
                     .uploadAsImage(context.sender.subject!!)
                     .plus("https://www.pixiv.net/artworks/${img.pid}")
                     .sendTo(context.sender.subject!!)
