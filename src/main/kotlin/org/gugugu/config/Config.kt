@@ -9,4 +9,6 @@ object Config : AutoSavePluginData(saveName = "config") {
     var repeatP : Double by value(3.0)
     var hhshP : Double by value(10.0)
     var sauceNaoApiKey : String by value()
+    val adminList : List<Long> by value()
+    val allowedGroup : List<Long> by value()
 }

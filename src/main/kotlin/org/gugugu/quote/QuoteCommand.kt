@@ -12,7 +12,7 @@ import java.io.File
 object AddQuoteCommand : RawCommand(
     PigeonBotConsole, "上传语录", description = "上传语录", usage = """
     回复别人的消息并附上截图
-    /上传语录 [图片]
+    #上传语录 [图片]
 """.trimIndent()
 ) {
     override suspend fun CommandContext.onCommand(args: MessageChain) {
@@ -54,6 +54,7 @@ object AddQuoteCommand : RawCommand(
         downloadImage(imageUrl, "$quoteFolderPath/$md5.jpg")
         // add quote
         QuoteData.quoteData.add(Quote(md5, memberQQ, quote))
+        this.sender.sendMessage("添加成功")
     }
 }
 
