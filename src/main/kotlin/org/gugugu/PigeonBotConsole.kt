@@ -1,5 +1,6 @@
 package org.gugugu
 
+import SetuCommand
 import net.mamoe.mirai.console.command.CommandManager
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.permission.AbstractPermitteeId
@@ -12,7 +13,6 @@ import org.gugugu.config.Config
 import org.gugugu.config.ConfigCommand
 import org.gugugu.game.GameData
 import org.gugugu.key_word_auto_reply.*
-import org.gugugu.pixiv.LoginCommand
 import org.gugugu.quote.AddQuoteCommand
 import org.gugugu.quote.QueryQuoteCommand
 import org.gugugu.quote.QuoteData
@@ -45,13 +45,12 @@ object PigeonBotConsole : KotlinPlugin(
         RandomQuoteCommand.register()
         AddQuoteCommand.register()
         QueryQuoteCommand.register()
+
+        SetuCommand.register()
         // subscribe messages
         subscribeKeywordAutoReply()
         cats()
 
-//        LoginCommand.register()
-        // register permission for pixivic login service
-//        Config.adminList.forEach { AbstractPermitteeId.ExactUser(it).permit(LoginCommand.permission) }
         Config.allowedGroup.forEach { AbstractPermitteeId.AnyMember(it).permit(PigeonBotConsole.parentPermission) }
         logger.info { "权限注册完成" }
         logger.info { "PigeonBot loaded" }
