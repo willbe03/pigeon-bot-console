@@ -40,6 +40,7 @@ object SetuCommand : SimpleCommand(PigeonBotConsole, "色图", description = "�
 //            }
 //        }.body<Setu>()
         val urlBuilder = SETU_API_ADDRESS.toHttpUrl().newBuilder()
+        urlBuilder.addQueryParameter("size", "regular")
         if (tag != null){
             urlBuilder.addQueryParameter("tag", tag)
             urlBuilder.addQueryParameter("num", "20")
