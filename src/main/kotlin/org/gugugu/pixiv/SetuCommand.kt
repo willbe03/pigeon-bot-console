@@ -56,14 +56,14 @@ object SetuCommand : SimpleCommand(PigeonBotConsole, "色图", description = "�
             context.sender.sendMessage("没有相关色图")
             return
         }
-
-        val imageUrl = response.data.random().urls?.original
+        val img = response.data.random()
+        val imageUrl = img.urls?.regular
         if (imageUrl != null) {
                 URL(imageUrl)
                     .openConnection()
                     .getInputStream()
                     .uploadAsImage(context.sender.subject!!)
-                    .plus("https://www.pixiv.net/artworks/${response.data[0].pid}")
+                    .plus("https://www.pixiv.net/artworks/${img.pid}")
                     .sendTo(context.sender.subject!!)
         } else {
             context.sender.sendMessage("网络异常捏")
