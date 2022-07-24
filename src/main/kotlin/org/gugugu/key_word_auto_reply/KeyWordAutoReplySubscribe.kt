@@ -19,7 +19,8 @@ fun subscribeKeywordAutoReply() {
                         val reply = value.random()
                         if (reply.startsWith("$")) {
                             // find image file with same name of reply in reply directory
-                            PigeonBotConsole.resolveDataFile("images/replies").listFiles { _, name -> name == "$reply.gif" }?.get(0)?.sendAsImageTo(subject)
+                            PigeonBotConsole.resolveDataFile("images/replies")
+                                .listFiles { _, name -> name == "$reply.gif" }?.get(0)?.sendAsImageTo(subject)
                         } else
                             group.sendMessage(reply)
                         break
@@ -28,7 +29,8 @@ fun subscribeKeywordAutoReply() {
             }
             //repeat
 
-            if(Random.nextDouble(0.0, 100.0)<= Config.repeatP){
+            if (!message.content.startsWith("#")
+                && Random.nextDouble(0.0, 100.0) <= Config.repeatP) {
                 group.sendMessage(message)
             }
         }

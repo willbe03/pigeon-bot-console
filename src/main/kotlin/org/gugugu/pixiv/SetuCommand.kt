@@ -61,7 +61,7 @@ object SetuCommand : SimpleCommand(PigeonBotConsole, "色图", description = "�
                     .getInputStream()
             }
                     .uploadAsImage(context.sender.subject!!)
-                    .plus("https://www.pixiv.net/artworks/${img.pid}")
+                    .plus("PID: ${img.pid}")
                     .sendTo(context.sender.subject!!)
         } else {
             context.sender.sendMessage("网络异常捏")

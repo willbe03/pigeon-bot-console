@@ -11,6 +11,7 @@ import net.mamoe.mirai.utils.info
 import org.gugugu.cats.cats
 import org.gugugu.config.Config
 import org.gugugu.config.ConfigCommand
+import org.gugugu.dice.DiceCommand
 import org.gugugu.game.GameData
 import org.gugugu.key_word_auto_reply.*
 import org.gugugu.quote.AddQuoteCommand
@@ -49,6 +50,7 @@ object PigeonBotConsole : KotlinPlugin(
         SetuCommand.register()
         // subscribe messages
         subscribeKeywordAutoReply()
+        DiceCommand.register()
         cats()
 
         Config.allowedGroup.forEach { AbstractPermitteeId.AnyMember(it).permit(PigeonBotConsole.parentPermission) }
