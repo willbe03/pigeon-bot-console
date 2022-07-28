@@ -8,6 +8,7 @@ import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.message.data.MessageSource.Key.quote
 import org.gugugu.PigeonBotConsole
 import org.gugugu.game.GameCommand.remove
+import org.gugugu.intervalSendMessage
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
@@ -31,7 +32,7 @@ object KeywordAdd : RawCommand(PigeonBotConsole, "add", "a", description = "增�
 //    @OptIn(MiraiInternalApi::class)
     override suspend fun CommandSender.onCommand(args: MessageChain) {
         if (args.size != 2) {
-            sendMessage("参数错误")
+            intervalSendMessage("参数错误")
             return
         }
         if (!args.contains(Image)) { // 不带图像
@@ -41,7 +42,7 @@ object KeywordAdd : RawCommand(PigeonBotConsole, "add", "a", description = "增�
                 KeywordData.replyData[key]?.add(value)
             else
                 KeywordData.replyData[key] = mutableSetOf(value)
-            sendMessage("添加\"${value}\"到\"${key}\"")
+            intervalSendMessage("添加\"${value}\"到\"${key}\"")
         } else { //带图像
             val key = args[0].content
             val value = args[1] as Image
@@ -53,7 +54,7 @@ object KeywordAdd : RawCommand(PigeonBotConsole, "add", "a", description = "增�
                 KeywordData.replyData[key]?.add("$" + value.md5.toHexString())
             else
                 KeywordData.replyData[key] = mutableSetOf("$" + value.md5.toHexString())
-            sendMessage("添加\"${value}\"到\"${key}\"")
+            intervalSendMessage("添加\"${value}\"到\"${key}\"")
         }
     }
 
@@ -63,22 +64,22 @@ object KeyWordList : SimpleCommand(PigeonBotConsole, "list", "ls", description =
     @Handler
     suspend fun CommandSender.list(key: String) {
         try {
-            sendMessage(KeywordData.replyData[key].toString())
+            intervalSendMessage(KeywordData.replyData[key].toString())
         } catch (e: Exception) {
-            sendMessage("未找到关键字")
+            intervalSendMessage("未找到关键字")
         }
     }
 
     @Handler
     suspend fun CommandSender.list() {
-        sendMessage(KeywordData.replyData.keys.toString())
+        intervalSendMessage(KeywordData.replyData.keys.toString())
     }
 }
 
 object KeyWordDelete : RawCommand(PigeonBotConsole, "del", "rm", description = "删除关键字") {
     override suspend fun CommandSender.onCommand(args: MessageChain) {
         if (args.size != 2) {
-            sendMessage("参数错误")
+            intervalSendMessage("参数错误")
             return
         }
         val key = args[0].content
@@ -93,9 +94,9 @@ object KeyWordDelete : RawCommand(PigeonBotConsole, "del", "rm", description = "
                     // 如果没有value就remove key
                     KeywordData.replyData.remove(key)
                 }
-                sendMessage("已删除关联词")
+                intervalSendMessage("已删除关联词")
             }else{
-                sendMessage("未找到关键词")
+                intervalSendMessage("未找到关键词")
             }
         }else{// 带图像
             val img = args[1] as Image
@@ -112,9 +113,9 @@ object KeyWordDelete : RawCommand(PigeonBotConsole, "del", "rm", description = "
                     // 如果没有value就remove key
                     KeywordData.replyData.remove(key)
                 }
-                sendMessage("已删除关联词")
+                intervalSendMessage("已删除关联词")
             }else{
-                sendMessage("未找到关键词")
+                intervalSendMessage("未找到关键词")
             }
         }
 

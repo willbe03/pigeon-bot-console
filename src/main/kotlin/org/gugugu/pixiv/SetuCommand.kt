@@ -10,6 +10,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.gugugu.PigeonBotConsole
+import org.gugugu.intervalSendMessage
 import java.net.URL
 
 const val SETU_API_ADDRESS = "https://api.lolicon.app/setu/v2"
@@ -45,11 +46,11 @@ object SetuCommand : SimpleCommand(PigeonBotConsole, "色图", description = "�
         val response  = Gson().fromJson<Setu>(body, Setu::class.java)
 
         if (response.error!! != "") {
-            context.sender.sendMessage(response.error!!)
+            context.sender.intervalSendMessage(response.error!!)
             return
         }
         if (response.data.size == 0) {
-            context.sender.sendMessage("没有相关色图")
+            context.sender.intervalSendMessage("没有相关色图")
             return
         }
         val img = response.data.random()
@@ -64,7 +65,7 @@ object SetuCommand : SimpleCommand(PigeonBotConsole, "色图", description = "�
                     .plus("PID: ${img.pid}")
                     .sendTo(context.sender.subject!!)
         } else {
-            context.sender.sendMessage("网络异常捏")
+            context.sender.intervalSendMessage("网络异常捏")
         }
     }
 }

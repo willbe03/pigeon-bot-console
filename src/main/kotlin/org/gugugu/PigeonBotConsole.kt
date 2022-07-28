@@ -35,6 +35,7 @@ object PigeonBotConsole : KotlinPlugin(
         Config.reload()
         GameData.reload()
         QuoteData.reload()
+        IntervalSender.startIntervalSend()
         // register commands
         KeywordAdd.register()
         KeyWordList.register()
@@ -64,7 +65,7 @@ object PigeonBotConsole : KotlinPlugin(
         CommandManager.INSTANCE.unregisterAllCommands(PigeonBotConsole)
     }
 
-    fun initFolders() {
+    private fun initFolders() {
         fun createFolder(vararg imageFolder: File) {
             for (folder in imageFolder) {
                 if (!folder.exists()) if (!folder.mkdirs()) logger.error("创建图片文件夹失败。")

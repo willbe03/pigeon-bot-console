@@ -5,6 +5,7 @@ import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.contact.getMember
 import org.gugugu.PigeonBotConsole
+import org.gugugu.intervalSendMessage
 
 object GameCommand : CompositeCommand(PigeonBotConsole, "game", "g", description = "游戏") {
     val games = GameData.games
@@ -14,9 +15,9 @@ object GameCommand : CompositeCommand(PigeonBotConsole, "game", "g", description
     suspend fun CommandSender.open(name: String) {
         if (!games.contains(Game(name, mutableListOf(), getTimeMillis()))) {
             games.add(Game(name, mutableListOf(user!!.id), getTimeMillis()))
-            sendMessage("添加成功")
+            intervalSendMessage("添加成功")
         }else{
-            sendMessage("已有此名称，请使用其他名称")
+            intervalSendMessage("已有此名称，请使用其他名称")
         }
     }
 
@@ -29,7 +30,7 @@ object GameCommand : CompositeCommand(PigeonBotConsole, "game", "g", description
                 reply += INDENT + bot?.getGroup(subject!!.id)?.getMember(user)?.nick+"\n"
             }
         }
-        sendMessage(reply)
+        intervalSendMessage(reply)
     }
 
     @SubCommand("join", "j")

@@ -5,6 +5,7 @@ import net.mamoe.mirai.contact.Contact.Companion.sendImage
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import org.gugugu.PigeonBotConsole
+import org.gugugu.intervalSendMessage
 import org.gugugu.key_word_auto_reply.downloadImage
 import org.gugugu.key_word_auto_reply.toHexString
 import java.io.File
@@ -17,7 +18,7 @@ object AddQuoteCommand : RawCommand(
 ) {
     override suspend fun CommandContext.onCommand(args: MessageChain) {
         if (!args.contains(Image)) {
-            this.sender.sendMessage("上传失败：未找到语录图片")
+            this.sender.intervalSendMessage("上传失败：未找到语录图片")
             return
         }
         val quote: String
@@ -33,7 +34,7 @@ object AddQuoteCommand : RawCommand(
             quote = ""
             memberQQ = message.findIsInstance<At>()!!.target
         } else {
-            this.sender.sendMessage("没有语录来源")
+            this.sender.intervalSendMessage("没有语录来源")
             return
         }
 //        val q = (this as MemberCommandSenderOnMessage).fromEvent.message
@@ -54,7 +55,7 @@ object AddQuoteCommand : RawCommand(
         downloadImage(imageUrl, "$quoteFolderPath/$md5.jpg")
         // add quote
         QuoteData.quoteData.add(Quote(md5, memberQQ, quote))
-        this.sender.sendMessage("添加成功")
+        this.sender.intervalSendMessage("添加成功")
     }
 }
 
@@ -68,7 +69,7 @@ object RandomQuoteCommand : SimpleCommand(PigeonBotConsole, "语录", descriptio
             val img = File("$quoteFolderPath/$filename.jpg")
             context.sender.subject!!.sendImage(img)
         } else {
-            context.sender.subject!!.sendMessage("没有找到语录")
+            context.sender.subject!!.intervalSendMessage("没有找到语录")
         }
     }
 }
@@ -82,7 +83,7 @@ object QueryQuoteCommand : SimpleCommand(PigeonBotConsole, "搜索语录", "q", 
         if (randomImageMd5 != null) {
             sendQuote(context, randomImageMd5)
         } else {
-            context.sender.subject!!.sendMessage("没有找到语录")
+            context.sender.subject!!.intervalSendMessage("没有找到语录")
         }
     }
 
@@ -92,7 +93,7 @@ object QueryQuoteCommand : SimpleCommand(PigeonBotConsole, "搜索语录", "q", 
         if (randomImageMd5 != null) {
             sendQuote(context, randomImageMd5)
         } else {
-            context.sender.subject!!.sendMessage("没有找到语录")
+            context.sender.subject!!.intervalSendMessage("没有找到语录")
         }
     }
 

@@ -1,20 +1,16 @@
 package org.gugugu.saucenao
 
 import com.google.gson.Gson
-import net.mamoe.mirai.IMirai
 import net.mamoe.mirai.console.command.CommandContext
-import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.console.command.RawCommand
-import net.mamoe.mirai.event.GlobalEventChannel
-import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
-import net.mamoe.mirai.utils.ExternalResource.Companion.sendAsImageTo
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.gugugu.config.Config
 import org.gugugu.PigeonBotConsole
+import org.gugugu.intervalSendMessage
 
 /**
  * enable Twitter, Pixiv, yande.re, Pixivhistorical
@@ -27,22 +23,22 @@ object SauceNaoCommand : RawCommand(PigeonBotConsole, "sauce", description = "�
     override suspend fun CommandContext.onCommand(args: MessageChain) {
         if (this.originalMessage.contains(QuoteReply)) {
             // Quote image to search
-            val image = this.originalMessage[QuoteReply]!!.source.originalMessage.get(Image)
+            val image = this.originalMessage[QuoteReply]!!.source.originalMessage[Image]
             val a = MessageSourceBuilder()
                 .allFrom(this.originalMessage[QuoteReply]!!.source)
                 .build(botId = 2211584232L, kind = MessageSourceKind.GROUP)
             a.originalMessage
             if (image != null) {
-                this.sender.sendMessage(search(image.queryUrl()))
+                this.sender.intervalSendMessage(search(image.queryUrl()))
             } else {
-                this.sender.sendMessage("错误：回复的消息内容没有图片")
+                this.sender.intervalSendMessage("错误：回复的消息内容没有图片")
             }
         } else {
             // direct search
             if (args.contains(Image)) {
-                this.sender.sendMessage(search(args.get(Image)!!.queryUrl()))
+                this.sender.intervalSendMessage(search(args[Image]!!.queryUrl()))
             } else {
-                this.sender.sendMessage("错误：消息内容没有图片")
+                this.sender.intervalSendMessage("错误：消息内容没有图片")
             }
         }
     }
@@ -81,7 +77,7 @@ object SauceNaoCommand : RawCommand(PigeonBotConsole, "sauce", description = "�
 fun search(url: String): String {
     //build url
     val apikey = Config.sauceNaoApiKey
-    val urlBuilder = SAUCENAO_URL.toHttpUrl().newBuilder();
+    val urlBuilder = SAUCENAO_URL.toHttpUrl().newBuilder()
     urlBuilder.addQueryParameter("dbmask", MASK.toString())
     urlBuilder.addQueryParameter("hide", "2")
     urlBuilder.addQueryParameter("testmode", "0")
@@ -104,7 +100,7 @@ fun search(url: String): String {
         // yandere
         12 -> {
             """
-                url: ${result.data.ext_urls.get(0)}
+                url: ${result.data.ext_urls[0]}
                 yandere_id: ${result.data.yandere_id}
                 similarity: ${result.header.similarity}
             """.trimIndent()
@@ -112,7 +108,7 @@ fun search(url: String): String {
         //twitter
         41 -> {
             """
-                url: ${result.data.ext_urls.get(0)}
+                url: ${result.data.ext_urls[0]}
                 twitter_user_name: ${result.data.twitter_user_handle}
                 similarity: ${result.header.similarity}
             """.trimIndent()
@@ -120,7 +116,7 @@ fun search(url: String): String {
         //pixiv
         else -> {
             """
-                url: ${result.data.ext_urls.get(0).toHttpUrl().toString()}
+                url: ${result.data.ext_urls[0].toHttpUrl()}
                 pixiv_id: ${result.data.pixiv_id}
                 similarity: ${result.header.similarity}
             """.trimIndent()

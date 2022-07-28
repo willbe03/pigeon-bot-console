@@ -6,6 +6,7 @@ import net.mamoe.mirai.message.data.content
 import net.mamoe.mirai.utils.ExternalResource.Companion.sendAsImageTo
 import org.gugugu.config.Config
 import org.gugugu.PigeonBotConsole
+import org.gugugu.intervalSendMessage
 import kotlin.random.Random
 
 fun subscribeKeywordAutoReply() {
@@ -22,7 +23,7 @@ fun subscribeKeywordAutoReply() {
                             PigeonBotConsole.resolveDataFile("images/replies")
                                 .listFiles { _, name -> name == "$reply.gif" }?.get(0)?.sendAsImageTo(subject)
                         } else
-                            group.sendMessage(reply)
+                            group.intervalSendMessage(reply)
                         break
                     }
                 }
@@ -31,7 +32,7 @@ fun subscribeKeywordAutoReply() {
 
             if (!message.content.startsWith("#")
                 && Random.nextDouble(0.0, 100.0) <= Config.repeatP) {
-                group.sendMessage(message)
+                group.intervalSendMessage(message)
             }
         }
     }
