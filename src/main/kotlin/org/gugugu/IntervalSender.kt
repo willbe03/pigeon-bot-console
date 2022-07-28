@@ -1,5 +1,6 @@
 package org.gugugu
 
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -31,17 +32,15 @@ fun Message.intervalSendTo(contact: Contact){
 object IntervalSender {
 
     private var queue = ArrayDeque<Pair<Message, Contact>>()
-    private var lastSendTime = 0L
 
     fun sendMessage(message: Message, subject: Contact) {
         queue.add(Pair(message, subject))
-        PigeonBotConsole.logger.info("added to queue, queue size: ${queue.size}")
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun startIntervalSend() {
         GlobalScope.launch {
             while (true) {
-                PigeonBotConsole.logger.info("coroutine executed, num of elem in queue is: ${queue.size}")
                 if(queue.isNotEmpty()){
                     val message = queue.removeFirst()
                     message.second.sendMessage(message.first)
