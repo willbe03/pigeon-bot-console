@@ -11,6 +11,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.gugugu.PigeonBotConsole
 import org.gugugu.intervalSendMessage
+import org.gugugu.intervalSendTo
 import java.net.URL
 
 const val SETU_API_ADDRESS = "https://api.lolicon.app/setu/v2"
@@ -63,7 +64,7 @@ object SetuCommand : SimpleCommand(PigeonBotConsole, "色图", description = "�
             }
                     .uploadAsImage(context.sender.subject!!)
                     .plus("PID: ${img.pid}")
-                    .sendTo(context.sender.subject!!)
+                    .intervalSendTo(context.sender.subject!!)
         } else {
             context.sender.intervalSendMessage("网络异常捏")
         }

@@ -4,9 +4,11 @@ import net.mamoe.mirai.event.GlobalEventChannel
 import net.mamoe.mirai.event.subscribeGroupMessages
 import net.mamoe.mirai.message.data.content
 import net.mamoe.mirai.utils.ExternalResource.Companion.sendAsImageTo
+import net.mamoe.mirai.utils.ExternalResource.Companion.uploadAsImage
 import org.gugugu.config.Config
 import org.gugugu.PigeonBotConsole
 import org.gugugu.intervalSendMessage
+import org.gugugu.intervalSendTo
 import kotlin.random.Random
 
 fun subscribeKeywordAutoReply() {
@@ -16,12 +18,13 @@ fun subscribeKeywordAutoReply() {
             // reply
             if (Random.nextDouble(0.0, 100.0) <= Config.replyP) {
                 for ((key, value) in autoReplyMap) {
-                    if (message.content.contains(key) && !message.content.startsWith("1")) {
+                    if (message.content.contains(key) && !message.content.startsWith("#")) {
                         val reply = value.random()
                         if (reply.startsWith("$")) {
                             // find image file with same name of reply in reply directory
                             PigeonBotConsole.resolveDataFile("images/replies")
-                                .listFiles { _, name -> name == "$reply.gif" }?.get(0)?.sendAsImageTo(subject)
+                                .listFiles { _, name -> name == "$reply.gif" }?.get(0)?.uploadAsImage(subject)
+                                ?.intervalSendTo(subject)
                         } else
                             group.intervalSendMessage(reply)
                         break

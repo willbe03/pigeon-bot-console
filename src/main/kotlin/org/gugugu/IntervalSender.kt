@@ -1,6 +1,7 @@
 package org.gugugu
 
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.mamoe.mirai.console.command.CommandSender
 import net.mamoe.mirai.contact.Contact
@@ -23,25 +24,29 @@ fun Contact.intervalSendMessage(message: String) {
     IntervalSender.sendMessage(message.toPlainText(), this)
 }
 
+fun Message.intervalSendTo(contact: Contact){
+    IntervalSender.sendMessage(this, contact)
+}
+
 object IntervalSender {
 
-    private var queue = ArrayList<Pair<Message, Contact>>()
+    private var queue = ArrayDeque<Pair<Message, Contact>>()
     private var lastSendTime = 0L
 
     fun sendMessage(message: Message, subject: Contact) {
         queue.add(Pair(message, subject))
+        PigeonBotConsole.logger.info("added to queue, queue size: ${queue.size}")
     }
 
     fun startIntervalSend() {
         GlobalScope.launch {
             while (true) {
-                val time = System.currentTimeMillis()
-                if(time - lastSendTime > 10 * 1000 && queue.isNotEmpty()) {
-                    val message = queue.first()
-                    queue.removeAt(0)
+                PigeonBotConsole.logger.info("coroutine executed, num of elem in queue is: ${queue.size}")
+                if(queue.isNotEmpty()){
+                    val message = queue.removeFirst()
                     message.second.sendMessage(message.first)
-                    lastSendTime = time
                 }
+                delay(1000)
             }
         }
     }
