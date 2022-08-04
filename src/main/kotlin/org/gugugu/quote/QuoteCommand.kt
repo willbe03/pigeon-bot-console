@@ -25,32 +25,19 @@ object AddQuoteCommand : RawCommand(
         val image = args[Image]!!
         val md5 = "$" + image.md5.toHexString()
         val memberQQ: Long
-
+        val imageUrl = image.queryUrl()
         val message = this.originalMessage
         if (message.contains(QuoteReply)) {
             quote = message[QuoteReply]!!.content
             memberQQ = message[QuoteReply]!!.source.fromId
         } else if (message.findIsInstance<At>() != null) {
-            quote = ""
+            quote = ocr(imageUrl)
             memberQQ = message.findIsInstance<At>()!!.target
         } else {
             this.sender.intervalSendMessage("没有语录来源")
             return
         }
-//        val q = (this as MemberCommandSenderOnMessage).fromEvent.message
-//        if (q[1] is QuoteReply){
-//            // 如果有quote
-//            quote = (q[1] as QuoteReply).source.originalMessage.content //quote message
-//            memberQQ = (q[1] as QuoteReply).source.fromId
-//        } else {
-//            quote = ""
-//            // TODO: check if message contains At
-//            val at = args.contentsList().firstOrNull { it is At } as At
-//            memberQQ = at.target
-//        }
-
         // download image
-        val imageUrl = image.queryUrl()
         val quoteFolderPath = PigeonBotConsole.resolveDataFile("images/quotes").absolutePath
         downloadImage(imageUrl, "$quoteFolderPath/$md5.jpg")
         // add quote
